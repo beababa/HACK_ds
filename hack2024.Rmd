@@ -1,0 +1,137 @@
+---
+title: "hackaton"
+author: "BMaranget"
+date: "2024-09-30"
+output: html_documentoutput:
+  html_document:
+    number_sections: yes
+    toc: yes
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+
+# Librairies et données
+
+## Librairies
+
+
+```{r}
+library(sf)# spatial
+library(mapsf)
+library(httr)# api
+library(jsonlite)
+```
+
+
+## Data
+
+```{r}
+siret <- read.csv("data/geo_siret_93.csv")
+# 930 M
+utilisateur <- read.csv("data/hackathon-ds-personne-morale.csv")
+# 644 M
+instructeur <- read.csv("data/hackathon-ds-service.csv")
+```
+
+
+# jointure utilisateur/instructeur et siret sur le cd93
+
+```{r}
+jointure <- merge (utilisateur, siret [,c("longitude", "latitude", "siret")], by= "siret")
+#14 199
+inconuu <- jointure [is.na(jointure$latitude),]
+jointure <- jointure [!is.na(jointure$latitude),]
+sf <- st_as_sf(jointure, coords = c("longitude", "latitude"), crs=st_crs(4326))
+mf_map(sf)
+st_write(sf,"data/sf.gpkg", "utilisateur", delete_layer=T)
+```
+
+```{r}
+jointure <- merge (instructeur, siret [,c("longitude", "latitude", "siret")], by.x = "service_siret",
+                   by.y= "siret")
+st_write(sf,"data/sf.gpkg", "instructeur", delete_layer=T)
+```
+
+# Jointure entre objet de la démarche et instructeur
+
+```{r}
+library(jsonlite)
+json_data <- fromJSON(data, flatten = T)
+colnames(json_data)
+objet <- json_data [, c("number", "title")] 
+json_data [json_data$number == 92897,]
+```
+
+
+
+```{r}
+instructeur <- st_read("data/sf.gpkg", "instructeur")
+objet.sf <- merge(instructeur, objet, by.x= "procedure_id", by.y="number")
+```
+```{r}
+st_write(objet.sf,"data/sf.gpkg", "objet")
+```
+
+
+# recup adresse sur fichier instructeur
+
+Utilisation API adresse car le SIRET ne correspond pas à l'adresse (plusieurs adresses pour 1 SIRET), on utilise donc l'adresse
+
+```{r}
+equiv <- NULL
+adresse <- instructeur [, c("service_adresse")]
+# essai uniquement gsub
+adressePlus <- gsub("\n", "", adressePlus)
+# Mieux  pour le format rqt html
+adressePlus <- URLencode(adresse, reserved=T)
+for (i in adressePlus){
+  rqt <- paste0("https://api-adresse.data.gouv.fr/search/?q=",i)
+  res <- httr::GET(rqt)
+# dans res, on remarque le status à 200, c'est ok. et le format json
+  tmp <- fromJSON(rawToChar(res$content))
+# on recherche la géométrie dan featrues / geometry
+# voir la librairie pour faire 
+  test <- tmp$features
+  testfin <- test$geometry
+  testfin$adresse <- i
+  equiv <- rbind(equiv, testfin)
+}
+str(equiv)
+equiv$coordinates
+# eclater les 2 coordonnes X et Y pour pouvoir reconstituer le spatial en df
+equiv$adresse
+X <- sapply(equiv$coordinates, "[", 1)
+Y <- sapply(equiv$coordinates, "[", 2)
+point <- st_as_sf(coords = c(X, Y) )
+```
+
+
+```{r}
+data <- "data/20240901041013-demarches.json/20240901041013-demarches.json"
+```
+
+
+
+```{r}
+library(rjson)
+json_data <- fromJSON(file=data)
+df <- as.data.frame(json_data)
+```
+
+
+```{r}
+json_data <-head(json_data,10)
+
+```
+
+
+
+
+
+
