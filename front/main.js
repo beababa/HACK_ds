@@ -49,7 +49,7 @@ const MAX_DISPLAY_SERVICES = 12;
 var listDemarches = {};
 
 // GET LIST OF ETABLISSEMENTS
-var requestServices = "./public/hackathon-ds-service.csv";
+var requestServices = "hackathon-ds-service.csv";
 
 async function getDataServices() {
   try {
@@ -70,7 +70,7 @@ async function getDataServices() {
 getDataServices();
 
 // GET LIST OF ETABLISSEMENTS
-var requestDemarches = "./public/demarches.json";
+var requestDemarches = "demarches.json";
 var demarches = null;
 
 async function getDataDemarches() {
