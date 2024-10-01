@@ -1,0 +1,15 @@
+{
+"type": "FeatureCollection",
+"name": "agg",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "SIRET": 12002301500031.0, "nb": 3, "procedure_id": 3, "service_adresse": 3, "nb_groupe_instructeur": 3, "nb_instructeur": 3, "nb_expert": 3 }, "geometry": { "type": "Point", "coordinates": [ 2.429303, 48.849514 ] } },
+{ "type": "Feature", "properties": { "SIRET": 13000801400149.0, "nb": 6, "procedure_id": 6, "service_adresse": 6, "nb_groupe_instructeur": 6, "nb_instructeur": 6, "nb_expert": 6 }, "geometry": { "type": "Point", "coordinates": [ 2.352364, 48.915212 ] } },
+{ "type": "Feature", "properties": { "SIRET": 13002916800015.0, "nb": 12, "procedure_id": 12, "service_adresse": 12, "nb_groupe_instructeur": 12, "nb_instructeur": 12, "nb_expert": 12 }, "geometry": { "type": "Point", "coordinates": [ 2.375159, 48.903948 ] } },
+{ "type": "Feature", "properties": { "SIRET": 17930001700011.0, "nb": 18, "procedure_id": 18, "service_adresse": 18, "nb_groupe_instructeur": 18, "nb_instructeur": 18, "nb_expert": 18 }, "geometry": { "type": "Point", "coordinates": [ 2.451817, 48.906506 ] } },
+{ "type": "Feature", "properties": { "SIRET": 18003611300017.0, "nb": 8, "procedure_id": 8, "service_adresse": 8, "nb_groupe_instructeur": 8, "nb_instructeur": 8, "nb_expert": 8 }, "geometry": { "type": "Point", "coordinates": [ 2.346412, 48.920402 ] } },
+{ "type": "Feature", "properties": { "SIRET": 22930008201453.0, "nb": 2, "procedure_id": 2, "service_adresse": 2, "nb_groupe_instructeur": 2, "nb_instructeur": 2, "nb_expert": 2 }, "geometry": { "type": "Point", "coordinates": [ 2.451704, 48.905808 ] } },
+{ "type": "Feature", "properties": { "SIRET": 38098030000095.0, "nb": 3, "procedure_id": 3, "service_adresse": 3, "nb_groupe_instructeur": 3, "nb_instructeur": 3, "nb_expert": 3 }, "geometry": { "type": "Point", "coordinates": [ 2.436723, 48.907042 ] } },
+{ "type": "Feature", "properties": { "SIRET": 78861779300013.0, "nb": 1, "procedure_id": 1, "service_adresse": 1, "nb_groupe_instructeur": 1, "nb_instructeur": 1, "nb_expert": 1 }, "geometry": { "type": "Point", "coordinates": [ 2.427778, 48.84891 ] } }
+]
+}
