@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hackathon DS</title>
+
+    <link rel="stylesheet" href="dsfr/dsfr.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <style type="text/css">
+      .fr-pagination__list {
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h3>Hackathon DS</h3>
+
+      <div class="fr-tabs">
+        <ul class="fr-tabs__list" role="tablist" aria-label="[A modifier | nom du système d'onglet]">
+            <li role="presentation">
+                <button id="tabpanel-404" class="fr-tabs__tab fr-icon-checkbox-line fr-tabs__tab--icon-left" tabindex="0" role="tab" aria-selected="true" aria-controls="tabpanel-404-panel">Fiches identités</button>
+            </li>
+            <li role="presentation">
+                <button id="tabpanel-405" class="fr-tabs__tab fr-icon-checkbox-line fr-tabs__tab--icon-left" tabindex="-1" role="tab" aria-selected="false" aria-controls="tabpanel-405-panel">Carte</button>
+            </li>
+        </ul>
+        <div id="tabpanel-404-panel" class="fr-tabs__panel fr-tabs__panel--selected" role="tabpanel" aria-labelledby="tabpanel-404" tabindex="0">
+          <div id="services">
+            <h3>Fiches d'identité des services</h3>
+            <div class="fr-container">
+              <div class="fr-grid-row fr-grid-row--gutters" id="list-services"></div>
+              
+              <nav role="navigation" class="fr-pagination fr-mt-4w" aria-label="Pagination">
+                <ul class="fr-pagination__list">
+                    <li>
+                        <a class="fr-pagination__link fr-pagination__link--first" aria-disabled="true" role="link">
+                            Première page
+                        </a>
+                    </li>
+                    <li>
+                        <a class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label" aria-disabled="true" role="link">
+                            Page précédente
+                        </a>
+                    </li>
+                    <li>
+                        <a class="fr-pagination__link" aria-current="page" title="Page 1">
+                            1
+                        </a>
+                    </li>
+                    <li>
+                        <a class="fr-pagination__link" href="#" title="Page 2">
+                            2
+                        </a>
+                    </li>
+                    <li>
+                        <a class="fr-pagination__link fr-displayed-lg" href="#" title="Page 3">
+                            3
+                        </a>
+                    </li>
+                    <li>
+                        <a class="fr-pagination__link fr-displayed-lg">
+                            …
+                        </a>
+                    </li>
+                    <li>
+                        <a class="fr-pagination__link fr-displayed-lg" href="#" title="Page 8">
+                            8
+                        </a>
+                    </li>
+                    <li>
+                        <a class="fr-pagination__link fr-displayed-lg" href="#" title="Page 9">
+                            9
+                        </a>
+                    </li>
+                    <li>
+                        <a class="fr-pagination__link" href="#" title="Page 10">
+                            10
+                        </a>
+                    </li>
+                    <li>
+                        <a class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label" href="#">
+                            Page suivante
+                        </a>
+                    </li>
+                    <li>
+                        <a class="fr-pagination__link fr-pagination__link--last" href="#">
+                            Dernière page
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            </div>
+          </div>
+          <div class="fr-mt-6w" id="demarches">
+            <h3>Les démarches associées</h3>
+            <ul id="list-demarches">La liste des démarches vide. Veuillez sélectionner un service.</ul>
+          </div>
+        </div>
+        <div id="tabpanel-405-panel" class="fr-tabs__panel" role="tabpanel" aria-labelledby="tabpanel-405" tabindex="0">
+          <div id="map" style="height:400px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modale Fiche identite -->
+    <dialog aria-labelledby="fr-modal-title-modal-fiche" role="dialog" id="fr-modal-fiche" class="fr-modal">
+      <div class="fr-container fr-container--fluid fr-container-md">
+          <div class="fr-grid-row fr-grid-row--center">
+              <div class="fr-col-12 fr-col-md-8">
+                  <div class="fr-modal__body">
+                      <div class="fr-modal__header">
+                          <button class="fr-btn--close fr-btn" title="Fermer la fenêtre modale" aria-controls="fr-modal-fiche" target="_self">Fermer</button>
+                      </div>
+                      <div class="fr-modal__content">
+                          <h1 id="fr-modal-title-modal-fiche" class="fr-modal__title">Fiche d'identité</h1>
+                          <p>Lorem ipsum dolor sit amet, consectetur gue cursus tincidunt sit amet sed orci.</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </dialog>
+    
+    <script type="module" src="dsfr/dsfr.module.min.js"></script>    
+    <script type="text/javascript" nomodule src="dsfr/dsfr.nomodule.min.js"></script>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
+
