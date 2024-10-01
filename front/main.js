@@ -2,9 +2,6 @@ import './style.css'
 import Papa from "papaparse";
 import map from "./map.js";
 
-// INIT MAP
-map.init();
-
 // API INSEE
 // const API_INSEE_HEADER = "X-INSEE-Api-Key-Integration";
 // const API_INSEE_KEY = "XXX";
@@ -51,10 +48,12 @@ const API_SIRET = {
     "name" : "CAISSE D ALLOCATIONS FAMILIALES DU LOIR ET CHER"
   }
 }
-
 // NUMERO SIRET MINISTRERE CULTURE 
 // 110 046 018 00013
 
+var IS_LOADING = true;
+
+var ALL_SERVICES = null;
 const MAX_DISPLAY_SERVICES = 11;
 var listDemarches = {};
 
@@ -72,19 +71,20 @@ async function getDataServices() {
     const json = await response.text();
     const services = Papa.parse(json).data;
     services.shift();
-    populateServices(services);
-    // map.populateServices(services);
+
+    ALL_SERVICES = services;
+    populateServices(ALL_SERVICES);
   } catch (error) {
     console.error(error.message);
   }
 }
-getDataServices();
 
 // GET LIST OF ETABLISSEMENTS
 var requestDemarches = "demarches.json";
 var demarches = null;
 
 async function getDataDemarches() {
+  
   try {
     const response = await fetch(requestDemarches);
     if (!response.ok) {
@@ -93,12 +93,15 @@ async function getDataDemarches() {
 
     const json = await response.json();
     demarches = json;
-    // console.log(demarches);
+
+    window.dispatchEvent(new Event("CHECKLOADER"));
+    map.init();
+    // map.getSIRET( "93", ALL_SERVICES);
+
   } catch (error) {
     console.error(error.message);
   }
 }
-getDataDemarches();
 
 function onServiceDetail(e) {
   e.preventDefault();
@@ -123,7 +126,6 @@ function populateModal ( selectedDemarches ) {
   selectedDemarches.forEach( demarche => {
     // ADD BUTTON TO MODAL
     listDemarches += '<a href="#" class="fr-tag fr-mr-1w fr-mb-1w" target="_self">' + demarche.title + '</a>';
-
     console.log( demarche );
   } );
 
@@ -172,3 +174,16 @@ function populateServices ( services ) {
     if (currentTile) currentTile.innerHTML = list.length + (list.length > 1 ? " démarches" : " démarche");
   }
 }
+
+// INIT ALL
+getDataServices();
+getDataDemarches();
+
+// Listen for the event.
+window.addEventListener(
+  "CHECKLOADER",
+  (e) => {
+    console.log("event checkloader");
+  },
+  false,
+);

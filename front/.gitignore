@@ -24,3 +24,4 @@ dist-ssr
 *.sw?
 
 public/demarches.json
+public/geo_siret_93.csv
