@@ -1,5 +1,9 @@
 import './style.css'
 import Papa from "papaparse";
+import map from "./map.js";
+
+// INIT MAP
+map.init();
 
 // API INSEE
 // const API_INSEE_HEADER = "X-INSEE-Api-Key-Integration";
@@ -15,6 +19,9 @@ const API_SIRET = {
   },
   "21310113200016" : {
     "name" : "COMMUNE DE CASTANET TOLOSAN"
+  },
+  "11004601800013" : {
+    "name" : "MINISTERE DE LA CULTURE"
   },
   "78042897500020" : {
     "name" : "CAISSE D'ALLOCATIONS FAMILIALES DE LA MARNE"
@@ -45,7 +52,10 @@ const API_SIRET = {
   }
 }
 
-const MAX_DISPLAY_SERVICES = 12;
+// NUMERO SIRET MINISTRERE CULTURE 
+// 110 046 018 00013
+
+const MAX_DISPLAY_SERVICES = 11;
 var listDemarches = {};
 
 // GET LIST OF ETABLISSEMENTS
@@ -63,6 +73,7 @@ async function getDataServices() {
     const services = Papa.parse(json).data;
     services.shift();
     populateServices(services);
+    // map.populateServices(services);
   } catch (error) {
     console.error(error.message);
   }
@@ -111,7 +122,7 @@ function populateModal ( selectedDemarches ) {
   
   selectedDemarches.forEach( demarche => {
     // ADD BUTTON TO MODAL
-    listDemarches += '<button class="fr-btn fr-btn--sm fr-btn--secondary">' + demarche.title + '</button>';
+    listDemarches += '<a href="#" class="fr-tag fr-mr-1w fr-mb-1w" target="_self">' + demarche.title + '</a>';
 
     console.log( demarche );
   } );
@@ -127,13 +138,16 @@ function populateServices ( services ) {
 
   services.forEach( (service, i) => {
 
-      if ( service[1] != '' ) {
+    var currentSIRET = service[1];
 
-        if ( servicesSIRET.indexOf( service[1] ) < 0 ) {
-            if (index < MAX_DISPLAY_SERVICES) {
-              listServices += '<div class="fr-col fr-col-md-6"><div class="fr-tile fr-tile--horizontal fr-enlarge-link tile-fiche-identite" data-siret="'+service[1]+'" data-title="'+API_SIRET[service[1]].name+'"><div class="fr-tile__body"><div class="fr-tile__content"><h3 class="fr-tile__title"><a href="#" data-fr-opened="false" aria-controls="fr-modal-fiche" data-siret="'+service[1]+'">'+API_SIRET[service[1]].name+'</a></h3><p class="fr-tile__detail">SIRET : '+service[1]+' -&nbsp;<span class="total-demarches"></span></p></div></div></div></div>';
+      if ( currentSIRET != '' ) {
+
+        if ( servicesSIRET.indexOf( currentSIRET ) < 0 ) {
+            if (index < MAX_DISPLAY_SERVICES || currentSIRET == "11004601800013" ) {
+              var serviceName = API_SIRET[currentSIRET] ? API_SIRET[currentSIRET].name : '-';
+              listServices += '<div class="fr-col fr-col-md-6"><div class="fr-tile fr-tile--horizontal fr-enlarge-link tile-fiche-identite" data-siret="'+service[1]+'" data-title="'+name+'"><div class="fr-tile__body"><div class="fr-tile__content"><h3 class="fr-tile__title"><a href="#" data-fr-opened="false" aria-controls="fr-modal-fiche" data-siret="'+service[1]+'">'+serviceName+'</a></h3><p class="fr-tile__detail">SIRET : '+service[1]+' -&nbsp;<span class="total-demarches"></span></p></div></div></div></div>';
             }
-            servicesSIRET.push( service[1] );
+            servicesSIRET.push( currentSIRET );
             index++;
         }
 
@@ -158,10 +172,3 @@ function populateServices ( services ) {
     if (currentTile) currentTile.innerHTML = list.length + (list.length > 1 ? " démarches" : " démarche");
   }
 }
-
-// INIT MAP
-var map = L.map('map').setView([48.847503475644594, 2.30621165836888], 13);
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19,
-  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-}).addTo(map);
