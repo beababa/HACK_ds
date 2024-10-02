@@ -31,6 +31,10 @@ library(jsonlite)
 
 ## Data
 
+
+https://files.data.gouv.fr/geo-sirene/last/dep/
+
+
 ```{r}
 siret <- read.csv("data/geo_siret_93.csv")
 # 930 M
@@ -43,7 +47,7 @@ instructeur <- read.csv("data/hackathon-ds-service.csv")
 # jointure utilisateur/instructeur et siret sur le cd93
 
 ```{r}
-jointure <- merge (utilisateur, siret [,c("longitude", "latitude", "siret")], by= "siret")
+jointure <- merge (utilisateur, siret [,c(, "longitude", "latitude", "siret")], by= "siret")
 #14 199
 inconuu <- jointure [is.na(jointure$latitude),]
 jointure <- jointure [!is.na(jointure$latitude),]
@@ -52,11 +56,52 @@ mf_map(sf)
 st_write(sf,"data/sf.gpkg", "utilisateur", delete_layer=T)
 ```
 
+On recherche dans le SIRET le champs nom...
+
 ```{r}
-jointure <- merge (instructeur, siret [,c("longitude", "latitude", "siret")], by.x = "service_siret",
-                   by.y= "siret")
-st_write(sf,"data/sf.gpkg", "instructeur", delete_layer=T)
+names(siret)
+table(siret$enseigne1Etablissement)
+head(siret)
 ```
+
+
+
+```{r}
+jointure <- merge (instructeur, siret [,c("enseigne1Etablissement","longitude", "latitude", "siret")], by.x = "service_siret",
+                   by.y= "siret")
+
+num <- as.character(unique(jointure$service_siret))
+as.character(unique(jointure$service_adresse))
+table(jointure$enseigne1Etablissement)
+```
+
+
+Pour le nom, on recherche sur répertoire SIRENE
+
+
+```{r}
+nom <- c("Douanes", "ARS", "DRIEETS", "PREFECTURE", "ANSM", "DPT", "CAF", "URSSAF")
+id <- data.frame(num, nom)
+jointure <- merge(jointure, id,  by.x = "service_siret", by.y = "num")
+st_write(jointure,"data/sf.gpkg", "instructeur", delete_layer=T)
+```
+
+DIRECTION GENERALE DES DOUANES ET DROITS INDIRECTS (DGDDI)
+
+ARS) à SAINT-DENIS
+Institut national de la statistique et des études économiques (Insee)
+
+DIRECTION REGIONALE ET INTERDEPARTEMENTALE  ECONOMIE EMPLOI TRAVAIL SOLIDARITES ILE-DE-FRANCE (DRIEETS) à AUBERVILLIERS
+
+PREFECTURE DE DEPARTEMENT SEINE-SAINT-DENIS à BOBIGNY
+
+AGENCE NATIONALE DE SECURITE DU MEDICAMENT ET DES PRODUITS DE SANTE (ANSM) à SAINT-DENIS
+
+DEPARTEMENT DE LA SEINE SAINT DENIS
+
+CAISSE D'ALLOCAT FAMIL SEINE-SAINT-DENIS (CAF 93 BOBIGNY) (CAF 93) ‣ 380 980 300
+
+URSSAF ILE DE FRANCE (URSSAF IDF) à MONTREUIL
 
 # Jointure entre objet de la démarche et instructeur
 
@@ -131,6 +176,13 @@ json_data <-head(json_data,10)
 ```
 
 
+Agregation par id procedure
+
+```{r}
+agg <- st_read("data/sf.gpkg", "agg")
+agg <- merge(agg, id, by.x="SIRET", by.y="num")
+st_write(agg, "data/sf.gpkg", "agg", delete_layer = T)
+```
 
 
 
